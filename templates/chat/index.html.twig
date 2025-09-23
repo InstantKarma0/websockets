@@ -1,0 +1,19 @@
+{# chat/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Chat</h1>
+
+    <h2>Bonjour, {{ user.email }}</h2>
+
+    <div {{ turbo_stream_listen(('conversations_'~user.uuid), "default", {withCredentials: true}) }}>
+        {% include "chat/message.container.html.twig" %}
+
+        {#
+        The messages will be displayed here.
+        "turbo_stream_listen()" automatically registers a Stimulus controller that subscribes to the "chat" topic as managed by the transport.
+        All connected users will receive the new messages!
+        #}
+    </div>
+
+{% endblock %}

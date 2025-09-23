@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div id="conversations">
+        {% for conversation in user.conversations %}
+            <div class="text-bubble">
+                <a href="{{ path("app_conversation_show", {uuid: conversation.uuid}) }}">
+                    Voir la conversation n°{{ conversation.id }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
