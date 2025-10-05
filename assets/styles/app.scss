@@ -1,0 +1,28 @@
+body {
+    background-color: lightgray;
+}
+
+
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #e0e0e0;
+    max-width: 80%;
+    width: fit-content;
+    &.message-received {
+        background-color: #e0e0e0;
+    }
+    &.message-sent {
+        background-color: #0084ff;
+        color: white;
+        margin-left: auto;
+    }
+}
+
+.message-received + .message-received, .message-sent + .message-sent {
+    margin-top: 3px;
+}
+
+.message-received + .message-sent, .message-sent + .message-received {
+    margin-top: 10px;
+}

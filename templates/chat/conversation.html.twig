@@ -1,26 +1,48 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Chat</h1>
-
-    <h2>Bonjour, {{ user.email }}</h2>
-
-    <div id="messages" {{ turbo_stream_listen(('conversation_'~conversation.uuid), "default", {withCredentials: true}) }}>
-        {#
-        The messages will be displayed here.
-        "turbo_stream_listen()" automatically registers a Stimulus controller that subscribes to the "chat" topic as managed by the transport.
-        All connected users will receive the new messages!
-        #}
+    <div class="container-fluid p-0">
+        <div class="card min-vh-100" style="max-height: 100vh">
+            <div class="card-header">
+                <h2>Conversation n°{{ conversation.uuid }}</h2>
+                <h2>{% for conversationUser in conversation.users %}{{ conversationUser.email }}{% if not loop.last %}, {% endif %}{% endfor %}</h2>
+            </div>
+            <div class="card-body">
+                <div id="messages" style="overflow-y: scroll" {{ turbo_stream_listen(topic, "default", {withCredentials: true}) }}>
+                    {% for message in conversation.conversationMessages %}
+                        {% include 'chat/conversation.container.html.twig' with {'message': message.content, 'sender': message.refUser} %}
+                    {% endfor %}
+                    {#
+                    The messages will be displayed here.
+                    "turbo_stream_listen()" automatically registers a Stimulus controller that subscribes to the "chat" topic as managed by the transport.
+                    All connected users will receive the new messages!
+                    #}
+                </div>
+            </div>
+            <div class="card-footer">
+                {{ block('form') }}
+            </div>
+        </div>
     </div>
 
+
+
+
+{% endblock %}
+
+
+{% block form %}
     <turbo-frame id="message_form">
-        {{ form(form) }}
+        {{ form_start(form) }}
 
-        {#
-        The form is displayed in a Turbo Frame, with this trick a new empty form is displayed after every post,
-        but the rest of the page will not change.
-        #}
+        <div class="input-group input-group-lg flex-nowrap">
+            {{ form_widget(form.message) }}
+            <button type="submit" class="btn btn-primary">{{ ux_icon('hugeicons:sent', {width: "24px"}) }}</button>
+        </div>
+
+        {{ form_end(form) }}
+
+
     </turbo-frame>
-
 {% endblock %}
 

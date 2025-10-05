@@ -1,7 +1,5 @@
 <turbo-stream action="append" targets="#messages">
     <template>
-        <div class="message">
-            {{ message }}
-        </div>
+        {% include "chat/conversation.container.html.twig" %}
     </template>
 </turbo-stream>

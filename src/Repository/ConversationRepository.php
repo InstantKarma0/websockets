@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Conversations;
+use App\Entity\Conversation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Conversations>
+ * @extends ServiceEntityRepository<Conversation>
  */
-class ConversationsRepository extends ServiceEntityRepository
+class ConversationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Conversations::class);
+        parent::__construct($registry, Conversation::class);
     }
 
     //    /**
-    //     * @return Conversations[] Returns an array of Conversations objects
+    //     * @return Conversation[] Returns an array of Conversation objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class ConversationsRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Conversations
+    //    public function findOneBySomeField($value): ?Conversation
     //    {
     //        return $this->createQueryBuilder('c')
     //            ->andWhere('c.exampleField = :val')

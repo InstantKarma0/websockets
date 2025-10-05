@@ -24,7 +24,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->uuid === null) {
             $this->uuid = Uuid::v7();
         }
-        $this->conversations = new ArrayCollection();
+        $this->conversation = new ArrayCollection();
+        $this->conversationMessages = new ArrayCollection();
     }
 
     #[ORM\Id]
@@ -52,10 +53,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     /**
-     * @var Collection<int, Conversations>
+     * @var Collection<int, Conversation>
      */
-    #[ORM\ManyToMany(targetEntity: Conversations::class, mappedBy: 'users')]
-    private Collection $conversations;
+    #[ORM\ManyToMany(targetEntity: Conversation::class, mappedBy: 'users')]
+    private Collection $conversation;
+
+    /**
+     * @var Collection<int, ConversationMessage>
+     */
+    #[ORM\OneToMany(targetEntity: ConversationMessage::class, mappedBy: 'refUser', orphanRemoval: true)]
+    private Collection $conversationMessages;
 
     public function getId(): ?int
     {
@@ -151,27 +158,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Conversations>
+     * @return Collection<int, Conversation>
      */
-    public function getConversations(): Collection
+    public function getConversation(): Collection
     {
-        return $this->conversations;
+        return $this->conversation;
     }
 
-    public function addConversation(Conversations $conversation): static
+    public function addConversation(Conversation $conversation): static
     {
-        if (!$this->conversations->contains($conversation)) {
-            $this->conversations->add($conversation);
+        if (!$this->conversation->contains($conversation)) {
+            $this->conversation->add($conversation);
             $conversation->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeConversation(Conversations $conversation): static
+    public function removeConversation(Conversation $conversation): static
     {
-        if ($this->conversations->removeElement($conversation)) {
+        if ($this->conversation->removeElement($conversation)) {
             $conversation->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ConversationMessage>
+     */
+    public function getConversationMessages(): Collection
+    {
+        return $this->conversationMessages;
+    }
+
+    public function addConversationMessage(ConversationMessage $conversationMessage): static
+    {
+        if (!$this->conversationMessages->contains($conversationMessage)) {
+            $this->conversationMessages->add($conversationMessage);
+            $conversationMessage->setRefUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversationMessage(ConversationMessage $conversationMessage): static
+    {
+        if ($this->conversationMessages->removeElement($conversationMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($conversationMessage->getRefUser() === $this) {
+                $conversationMessage->setRefUser(null);
+            }
         }
 
         return $this;

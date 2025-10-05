@@ -6,7 +6,7 @@
 
     <h2>Bonjour, {{ user.email }}</h2>
 
-    <div {{ turbo_stream_listen(('conversations_'~user.uuid), "default", {withCredentials: true}) }}>
+    <div {{ turbo_stream_listen(('conversation_'~user.uuid), "default", {withCredentials: true}) }}>
         {% include "chat/message.container.html.twig" %}
 
         {#

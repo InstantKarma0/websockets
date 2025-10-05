@@ -1,6 +1,6 @@
 {# chat/message.stream.html.twig #}
 {# New messages received through the Mercure connection are appended to the div with the "messages" ID. #}
-<turbo-stream action="replace" targets="#conversations">
+<turbo-stream action="replace" targets="#conversation">
     <template>
         {% include "chat/message.container.html.twig" %}
     </template>
